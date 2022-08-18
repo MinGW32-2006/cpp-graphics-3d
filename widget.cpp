@@ -16,9 +16,15 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
   view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->setBackgroundBrush(Qt::lightGray);
+
+  fps = new QLabel(this);
+  fps->setGeometry(15, 15, 60, 15);
+  fps->setFont(QFont(DEFAULT_FONT));
+  fps->setText("0 FPS");
 }
 
 Widget::~Widget() {
+  delete fps;
   delete view;
   delete scene;
 }

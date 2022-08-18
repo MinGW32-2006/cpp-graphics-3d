@@ -4,6 +4,7 @@
 #include "global-config.h"
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QLabel>
 #include <QWidget>
 
 class Widget : public QWidget {
@@ -16,5 +17,6 @@ public:
 private:
   QGraphicsScene *scene;
   QGraphicsView *view;
+  QLabel *fps;
 };
 #endif // WIDGET_H
