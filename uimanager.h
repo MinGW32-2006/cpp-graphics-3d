@@ -16,6 +16,12 @@ public slots:
   void run();
   void stop();
 
+  void update_alpha(double delta);
+  void update_beta(double delta);
+  void update_scale(double delta);
+  void update_face_alpha(double delta);
+  void update_face_beta(double delta);
+
 signals:
   void finished();
   void update_ui(QVector<QPolygonF> polygons, QVector<int> colormap);

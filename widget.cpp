@@ -27,6 +27,17 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
           SLOT(flash(QVector<QPolygonF>, QVector<int>)),
           Qt::BlockingQueuedConnection);
 
+  connect(this, SIGNAL(delta_alpha(double)), manager,
+          SLOT(update_alpha(double)), Qt::DirectConnection);
+  connect(this, SIGNAL(delta_beta(double)), manager, SLOT(update_beta(double)),
+          Qt::DirectConnection);
+  connect(this, SIGNAL(delta_scale(double)), manager,
+          SLOT(update_scale(double)), Qt::DirectConnection);
+  connect(this, SIGNAL(delta_face_alpha(double)), manager,
+          SLOT(update_face_alpha(double)), Qt::DirectConnection);
+  connect(this, SIGNAL(delta_face_beta(double)), manager,
+          SLOT(update_face_beta(double)), Qt::DirectConnection);
+
   connect(thread, &QThread::started, manager, &UIManager::run,
           Qt::DirectConnection);
   connect(manager, &UIManager::finished, thread, &QThread::quit,
@@ -54,6 +65,12 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
 
   watchdog->moveToThread(watchthread);
   watchthread->start();
+
+  timer = new QTimer;
+  timer->setInterval(20);
+  connect(timer, &QTimer::timeout, this, &Widget::keyFetch,
+          Qt::DirectConnection);
+  timer->start();
 }
 
 Widget::~Widget() {
@@ -62,6 +79,17 @@ Widget::~Widget() {
   delete fps;
   delete view;
   delete scene;
+  delete timer;
+}
+
+void Widget::keyPressEvent(QKeyEvent *event) {
+  if (!event->isAutoRepeat())
+    keymap[event->key()] = true;
+}
+
+void Widget::keyReleaseEvent(QKeyEvent *event) {
+  if (!event->isAutoRepeat())
+    keymap[event->key()] = false;
 }
 
 void Widget::flash(QVector<QPolygonF> polygons, QVector<int> colormap) {
@@ -77,4 +105,22 @@ void Widget::flash(QVector<QPolygonF> polygons, QVector<int> colormap) {
 
 void Widget::fps_update(int fps_number) {
   fps->setText(QString::number(fps_number) + " FPS");
+}
+
+void Widget::keyFetch() {
+  QList<int> keys = keymap.keys();
+  for (int i = 0; i < keys.size(); ++i) {
+    if (keys[i] == Qt::Key_W && keymap[keys[i]])
+      emit delta_alpha(0.01);
+    if (keys[i] == Qt::Key_S && keymap[keys[i]])
+      emit delta_alpha(-0.01);
+    if (keys[i] == Qt::Key_A && keymap[keys[i]])
+      emit delta_beta(-0.01);
+    if (keys[i] == Qt::Key_D && keymap[keys[i]])
+      emit delta_beta(0.01);
+    if (keys[i] == Qt::Key_Space && keymap[keys[i]])
+      emit delta_scale(-0.1);
+    if (keys[i] == Qt::Key_Z && keymap[keys[i]])
+      emit delta_scale(0.1);
+  }
 }

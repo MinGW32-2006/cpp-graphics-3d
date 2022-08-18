@@ -1,5 +1,6 @@
 #include "uimanager.h"
 #include "graphics.h"
+#include <QDebug>
 #include <QPolygonF>
 #include <algorithm>
 #include <cmath>
@@ -95,13 +96,18 @@ void UIManager::run() {
     }
 
     emit update_ui(polygons, colormap);
-
-    alpha += 0.001;
-    beta += 0.0005;
-    face_alpha += 0.001;
-    face_beta += 0.0005;
   }
   emit finished();
 }
 
 void UIManager::stop() { is_running = false; }
+
+void UIManager::update_alpha(double delta) { alpha += delta; }
+
+void UIManager::update_beta(double delta) { beta += delta; }
+
+void UIManager::update_scale(double delta) { scale += delta; }
+
+void UIManager::update_face_alpha(double delta) { face_alpha += delta; }
+
+void UIManager::update_face_beta(double delta) { face_beta += delta; }
