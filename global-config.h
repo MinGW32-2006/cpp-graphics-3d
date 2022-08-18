@@ -1,4 +1,6 @@
 #ifndef GLOBALCONFIG_H
 #define GLOBALCONFIG_H
 
+#define VERSION 1
+
 #endif // GLOBALCONFIG_H
