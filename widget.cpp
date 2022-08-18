@@ -16,7 +16,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
                       height() * 2000);
 
   fps = new QLabel(this);
-  fps->setGeometry(15, 15, 60, 15);
+  fps->setGeometry(15, 15, 75, 15);
   fps->setFont(QFont("Noto Sans Mono CJK SC"));
   fps->setText("0 FPS");
 
@@ -92,6 +92,26 @@ void Widget::keyReleaseEvent(QKeyEvent *event) {
     keymap[event->key()] = false;
 }
 
+void Widget::mousePressEvent(QMouseEvent *event) {
+  mouse_dx = event->x();
+  mouse_dy = event->y();
+  grabMouse();
+}
+
+void Widget::mouseReleaseEvent(QMouseEvent *event) {
+  Q_UNUSED(event);
+  releaseMouse();
+}
+
+void Widget::mouseMoveEvent(QMouseEvent *event) {
+  double mouse_x = event->x();
+  double mouse_y = event->y();
+  emit delta_face_alpha((mouse_y - mouse_dy) / 1000);
+  emit delta_face_beta(-(mouse_x - mouse_dx) / 1000);
+  mouse_dx = mouse_x;
+  mouse_dy = mouse_y;
+}
+
 void Widget::flash(QVector<QPolygonF> polygons, QVector<int> colormap) {
   const QVector<QColor> colors = {Qt::red,    Qt::green,    Qt::blue,
                                   Qt::yellow, Qt::darkCyan, Qt::darkMagenta};
@@ -111,9 +131,9 @@ void Widget::keyFetch() {
   QList<int> keys = keymap.keys();
   for (int i = 0; i < keys.size(); ++i) {
     if (keys[i] == Qt::Key_W && keymap[keys[i]])
-      emit delta_alpha(0.01);
-    if (keys[i] == Qt::Key_S && keymap[keys[i]])
       emit delta_alpha(-0.01);
+    if (keys[i] == Qt::Key_S && keymap[keys[i]])
+      emit delta_alpha(0.01);
     if (keys[i] == Qt::Key_A && keymap[keys[i]])
       emit delta_beta(-0.01);
     if (keys[i] == Qt::Key_D && keymap[keys[i]])

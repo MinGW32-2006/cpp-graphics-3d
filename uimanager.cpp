@@ -9,7 +9,7 @@ using std::sort;
 
 UIManager::UIManager(QObject *parent)
     : QObject(parent), is_running(true), alpha(0), beta(0), scale(10),
-      face_alpha(M_PI), face_beta(0) {}
+      face_alpha(0), face_beta(M_PI) {}
 
 void UIManager::run() {
   const QVector<QVector3D> points = {{1, 1, 1},   {1, 1, -1},  {1, -1, 1},

@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QMap>
+#include <QMouseEvent>
 #include <QPolygonF>
 #include <QThread>
 #include <QTimer>
@@ -21,6 +22,9 @@ public:
   ~Widget();
   void keyPressEvent(QKeyEvent *event);
   void keyReleaseEvent(QKeyEvent *event);
+  void mousePressEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event);
 
 public slots:
   void flash(QVector<QPolygonF> polygons, QVector<int> colormap);
@@ -45,5 +49,6 @@ private:
   QThread *watchthread;
   QMap<int, bool> keymap;
   QTimer *timer;
+  double mouse_dx, mouse_dy;
 };
 #endif // WIDGET_H
