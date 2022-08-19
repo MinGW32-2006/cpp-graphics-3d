@@ -17,7 +17,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
 
   fps = new QLabel(this);
   fps->setGeometry(15, 15, 75, 15);
-  fps->setFont(QFont("Noto Sans Mono CJK SC"));
+  fps->setFont(QFont("Consolas"));
   fps->setText("0 FPS");
 
   manager = new UIManager;
@@ -93,8 +93,8 @@ void Widget::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void Widget::mousePressEvent(QMouseEvent *event) {
-  mouse_dx = event->x();
-  mouse_dy = event->y();
+  mouse_dx = event->position().x();
+  mouse_dy = event->position().y();
   grabMouse();
 }
 
@@ -104,8 +104,8 @@ void Widget::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *event) {
-  double mouse_x = event->x();
-  double mouse_y = event->y();
+  double mouse_x = event->position().x();
+  double mouse_y = event->position().y();
   emit delta_face_alpha((mouse_y - mouse_dy) / 1000);
   emit delta_face_beta(-(mouse_x - mouse_dx) / 1000);
   mouse_dx = mouse_x;
